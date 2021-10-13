@@ -1,15 +1,76 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div class="container">
+     
+    <Header @toggle-add-task="toggleTask" title="Task Tracker" />
+    <div v-show="showAddTask" >
+ <AddTask @add-task="addTask"/>
+    </div>
+  
+    <Tasks
+      @delete-task="deleteTask"
+      @toggle-reminder="toggleReminder"
+      :tasks="tasks"
+    />
+  </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import Header from './components/Header.vue'
+import Tasks from './components/Tasks.vue'
+import AddTask from './components/AddTask.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    Header,
+    Tasks,
+    AddTask
+  },
+  data() {
+    return {
+      tasks: [],
+      showAddTask:false
+    }
+  },
+
+  methods :{
+    toggleTask (){
+      this.showAddTask = !this.showAddTask
+    },
+    addTask(task){
+      this.tasks = [...this.tasks,task]
+    },
+    deleteTask(id){
+      this.tasks = this.tasks.filter((task)=>task.id !== id)
+    },
+    toggleReminder(id){
+      this.tasks = this.tasks.map((task)=>task.id == id ? {...task, reminder: !task.reminder}:task)
+    }
+  },
+  created() {
+    this.tasks = [
+      {
+        id:1,
+        text: "Booking",
+        day : "1/1/11",
+        reminder : true
+
+      },
+            {
+        id:2,
+        text: "Booking",
+        day : "1/1/11",
+        reminder : false
+
+      },
+            {
+        id:3,
+        text: "Booking",
+        day : "1/1/11",
+        reminder : true
+
+      }
+    ]
   }
 }
 </script>
